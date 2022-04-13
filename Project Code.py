@@ -17,12 +17,15 @@ class OrderCostCalculator:
         photo = PhotoImage(file=r'TCULacrosse.gif') # specify the path to your file; the r prefix stands for "raw" string
         Label(window, image=photo).grid(row = 1, column = 1, sticky = W)  #put the image in a label to display it in the window
         
+        # From Loan Calculator, THANKS! :)
         # First, create labels in the window for each input and output value. Note they are put into a grid with rows and columns
-        Label(window, text = "Annual Interest Rate").grid(row = 2, column = 1, sticky = W)
-        Label(window, text = "Number of Years").grid(row = 3, column = 1, sticky = W)
-        Label(window, text = "Loan Amount").grid(row = 4, column = 1, sticky = W)
-        Label(window, text = "Monthly Payment").grid(row = 5, column = 1, sticky = W)
-        Label(window, text = "Total Payment").grid(row = 6, column = 1, sticky = W)
+        Label(window, text = "Select Product").grid(row = 2, column = 1, sticky = W)
+        Label(window, text = "Select Color").grid(row = 3, column = 1, sticky = W)
+        Label(window, text = "Select Size").grid(row = 4, column = 1, sticky = W)
+        Label(window, text = "Select Quantity").grid(row = 5, column = 1, sticky = W)
+        Label(window, text = "Loan Amount").grid(row = 6, column = 1, sticky = W)
+        Label(window, text = "Monthly Payment").grid(row = 7, column = 1, sticky = W)
+        Label(window, text = "Total Payment").grid(row = 8, column = 1, sticky = W)
         
         #For each of the three inputs, create string variable and get their values through Entry control
         self.annualInterestRateVar = StringVar()
