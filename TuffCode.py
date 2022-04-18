@@ -6,7 +6,6 @@ Purpose: Calculate the total order cost of an order for a TCU Lacrosse Store cus
 Installation Instructions: Save this file and the accompanying TCU Lacrosse logo in the same folder
 '''
 
-from distutils.command.config import config
 from tkinter import * #import tkinter
 from tkinter.ttk import *
 
@@ -129,9 +128,6 @@ class OrderCostCalculator():
         self.HoodiePrice = 45
         self.PantsPrice = 40
 
-        # window.mainloop() # Create an event loop
-
-
     def getTaxAndShipping(self, Subtotal):
         #this function calculates the tax and shipping by multiplying the subtotal cost by the sales tax rate in Texas, then adding the $5 shipping fee
         TaxAndShipping = (Subtotal * 0.0825) + 5
@@ -149,19 +145,47 @@ class OrderCostCalculator():
 
 OrderCostCalculator()  # Create GUI
 
-def PayDelivWindow():
-        PayDeliv = Tk()
-        PayDeliv.title = 'Payment and Delivery Method'
-        Label(PayDeliv, text = "Select Delivery Method:").grid(row = 2, column = 1, sticky = W)
-        Radiobutton(PayDeliv, text = "Pickup").grid(row = 2, column = 2, sticky = W)
-        Radiobutton(PayDeliv, text = "Ship to Address").grid(row = 2, column = 3, sticky = W)
-        Label(PayDeliv, text = "Enter Payment Information Below:").grid(row = 3, column = 1, sticky = W)
-        Entry(PayDeliv, text = "Credit Card Number").grid(row = 4, column = 1, sticky = W)
-        Entry(PayDeliv, text = "Name on Card").grid(row = 4, column = 2, sticky = W)
-        Entry(PayDeliv, text = "Expiration Date").grid(row = 5, column = 1, sticky = W)
-        Entry(PayDeliv, text = "Security Code/CVC").grid(row = 5, column = 2, sticky = W)
-        PayDeliv.mainloop()
-        
-Button(window, text = 'Proceed to Payment and Delivery', command = PayDelivWindow).grid(row = 9, column = 7, sticky = E)       
+# Pay = Tk()
+# Pay.title = 'Payment Method'
+
+def PayWindow():
+        Pay = Tk()
+        Pay.title = 'Payment Method'
+        Label(Pay, text = "Enter Payment Information Below:").grid(row = 1, column = 1, sticky = W)    
+        Label(Pay, text = "Card Number:").grid(row = 2, column = 1, sticky = W)
+        Label(Pay, text = "Name on Card:").grid(row = 2, column = 3, sticky = W)
+        Label(Pay, text = "Expiration Date:").grid(row = 3, column = 1, sticky = W)
+        Label(Pay, text = "CVC/Security Code:").grid(row = 3, column = 3, sticky = W)
+        PayMethod = StringVar()
+        Entry(Pay, textvariable = PayMethod).grid(row = 2, column = 2, sticky = W)
+        PayMethod2 = StringVar()
+        Entry(Pay, textvariable = PayMethod2).grid(row = 2, column = 4, sticky = W)
+        PayMethod3 = StringVar()
+        Entry(Pay, textvariable = PayMethod3).grid(row = 3, column = 2, sticky = W)
+        PayMethod4 = StringVar()
+        Entry(Pay, textvariable = PayMethod4).grid(row = 3, column = 4, sticky = W)
+        Button(Pay, text = 'Proceed to Delivery', command = DelivWindow).grid(row = 6, column = 4, sticky = E)
+
+Button(window, text = 'Proceed to Payment', command = PayWindow).grid(row = 9, column = 7, sticky = E)       
+
+def DelivWindow():
+    Deliv = Tk()
+    Deliv.title = 'Delivery Method'
+    Label(Deliv, text = "Select Delivery Method:").grid(row = 1, column = 1, sticky = W)
+    DelivMethod = IntVar()
+    Radiobutton(Deliv, text = "Pickup", variable = DelivMethod, value = 'Pickup').grid(row = 2, column = 2, sticky = W)
+    Radiobutton(Deliv, text = "Ship to Address", variable = DelivMethod, value = 'Ship to Address').grid(row = 2, column = 1, sticky = W)
+    Label(Deliv, text = "Street Name:").grid(row = 3, column = 1, sticky = W)
+    Label(Deliv, text = "City:").grid(row = 4, column = 1, sticky = W)
+    Label(Deliv, text = "State:").grid(row = 5, column = 1, sticky = W)
+    Label(Deliv, text = "ZIP Code:").grid(row = 6, column = 1, sticky = W)
+    DelivMethod2 = IntVar()
+    Entry(Deliv, textvariable = DelivMethod2).grid(row = 3, column = 2, sticky = W)
+    DelivMethod3 = IntVar()
+    Entry(Deliv, textvariable = DelivMethod3).grid(row = 4, column = 2, sticky = W)
+    DelivMethod4 = IntVar()
+    Entry(Deliv, textvariable = DelivMethod4).grid(row = 5, column = 2, sticky = W)
+    DelivMethod5 = IntVar()
+    Entry(Deliv, textvariable = DelivMethod5).grid(row = 6, column = 2, sticky = W)      
 
 mainloop()
