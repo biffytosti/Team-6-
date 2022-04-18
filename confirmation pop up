@@ -1,0 +1,22 @@
+from tkinter import *
+import random
+
+class Window(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.master = master
+        self.pack(fill=BOTH, expand=1)
+        text = Label(self, text="Your order has been recieved!",foreground='White', background='Purple')
+        text.place(x=110,y=40)
+        text = Label(self, text="Orders will be shipped within two business days.",foreground='White', background='Purple')
+        text.place(x=60,y=60)
+        text = Label(self, text="Thank you for shopping at TCU Lacrosse Team Store.",foreground='White', background='Purple')
+        text.place(x=50,y=80)
+
+root = Tk()
+app = Window(root)
+root.wm_title("Order Confirmation")
+root.geometry("400x150")
+app.configure(background='Purple') 
+root.mainloop()
+
