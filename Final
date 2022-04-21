@@ -1,0 +1,282 @@
+'''
+Program: TCU Lacrosse Store Cost Calculator
+Program Developers: Trager Conard, Hayden Lunde, Biffy Tosti, and Camden Handwerger
+Date: April 21, 2022
+Purpose: Calculate the total order cost of an order for a TCU Lacrosse Store customer
+Installation Instructions: Save this file and the accompanying TCU Lacrosse logo in the same folder
+'''
+
+from tkinter import * #import tkinter
+from tkinter.ttk import *
+import random
+
+window = Tk() # Create a window instance
+window.title("TCU Lacrosse Team Store") # Set title of the window
+window.configure(bg='white')
+#Images for each clothing item
+photo = PhotoImage(file=r'TCULacrosse.gif') # specify the path to your file; the r prefix stands for "raw" string
+Label(window, image=photo).grid(row = 1, column = 1, sticky = W)  #put the image in a label to display it in the window
+photoShirt = PhotoImage(file=r'Shirt.gif')
+Label(window, image=photoShirt).grid(row = 1, column = 2, sticky = W)  
+photoLong = PhotoImage(file=r'LongSleeve.gif')
+Label(window, image=photoLong).grid(row = 1, column = 3, sticky = W)
+photoHoodie = PhotoImage(file=r'Hoodie.gif')
+Label(window, image=photoHoodie).grid(row = 1, column = 4, sticky = W)
+photoSweats = PhotoImage(file=r'Sweats.gif')
+Label(window, image=photoSweats).grid(row = 1, column = 5, sticky = W)
+
+class OrderCostCalculator():
+    def __init__(self):
+        # Our GUI application has three inputs and two outputs plus a Compute Payment Button, so we will need six rows and two columns
+        photo = PhotoImage(file=r'TCULacrosse.gif') # specify the path to your file; the r prefix stands for "raw" string
+        Label(window, image=photo).grid(row = 1, column = 1, sticky = W)  #put the image in a label to display it in the window
+        # From Loan Calculator, THANKS! :)
+        # First, create labels in the window for each input and output value.
+        Label(window, text = "Select Product").grid(row = 2, column = 1, sticky = W)
+        Label(window, text = "Select Color").grid(row = 3, column = 1, sticky = W)
+        Label(window, text = "Select Size").grid(row = 4, column = 1, sticky = W)
+        Label(window, text = "Select Quantity").grid(row = 5, column = 1, sticky = W)
+        Label(window, text = "Subtotal Cost").grid(row = 6, column = 1, sticky = W)
+        Label(window, text = "Shipping and Tax").grid(row = 7, column = 1, sticky = W)
+        Label(window, text = "Total Cost").grid(row = 8, column = 1, sticky = W)
+        #For each of the three inputs, we created radio buttons and check buttons to select which product(s), color(s), and size(s)
+        Label(window, text = 'Short Sleeve: $22').grid(row = 2, column = 2)
+        Label(window, text = 'Long Sleeve: $30').grid(row = 2, column = 3)
+        Label(window, text = 'Hoodie: $45').grid(row = 2, column = 4)
+        Label(window, text = 'Sweat Pants: $40').grid(row = 2, column = 5)
+
+        colorOptions = [
+            "Black",
+            "White",
+            "Purple",
+            "Grey"
+        ]    
+        #The above and below code allows for a dropdown menu of the color options for each product
+        hoodieColor = StringVar(window)
+        shirtColor = StringVar(window)
+        pantsColor = StringVar(window)
+        longSleeveColor = StringVar(window)
+
+        hoodieColor.set(colorOptions[0])
+        shirtColor.set(colorOptions[0])
+        pantsColor.set(colorOptions[0])
+        longSleeveColor.set(colorOptions[0])
+        
+        OptionMenu(window, shirtColor, *colorOptions).grid(row = 3, column = 2)
+        OptionMenu(window, longSleeveColor, *colorOptions).grid(row = 3, column = 3)
+        OptionMenu(window, hoodieColor, *colorOptions).grid(row = 3, column = 4)
+        OptionMenu(window, pantsColor, *colorOptions).grid(row = 3, column = 5)
+
+        SizeOptions = [
+            "XSmall",
+            "Small",
+            "Medium",
+            "Large",
+            "XLarge"
+        ]    
+
+        #the above and below code allows for a dropdown menu of the sizes available for each product
+       
+        shirtSize = StringVar(window)
+        longSleeveSize = StringVar(window)
+        HoodieSize = StringVar(window)
+        pantsSize = StringVar(window)
+
+        shirtSize.set(SizeOptions[0])
+        longSleeveSize.set(SizeOptions[0])
+        HoodieSize.set(SizeOptions[0])
+        pantsSize.set(SizeOptions[0])
+
+        OptionMenu(window, shirtSize, *SizeOptions).grid(row = 4, column = 2)
+        OptionMenu(window, longSleeveSize, *SizeOptions).grid(row = 4, column = 3)
+        OptionMenu(window, HoodieSize, *SizeOptions).grid(row = 4, column = 4)
+        OptionMenu(window, pantsSize, *SizeOptions).grid(row = 4, column = 5)
+
+        numProduct = [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4"
+        ]    
+
+        #the above and below code allows for a dropdown menu of the quantity available for each product
+
+        self.shirtNum = IntVar(window)
+        self.longSleeveNum = IntVar(window)
+        self.hoodieNum = IntVar(window)
+        self.pantsNum = IntVar(window)
+
+        self.shirtNum.set(numProduct[0])
+        self.longSleeveNum.set(numProduct[0])
+        self.hoodieNum.set(numProduct[0])
+        self.pantsNum.set(numProduct[0])
+
+        OptionMenu(window, self.shirtNum, *numProduct).grid(row = 5, column = 2)
+        OptionMenu(window, self.longSleeveNum, *numProduct).grid(row = 5, column = 3)
+        OptionMenu(window, self.hoodieNum, *numProduct).grid(row = 5, column = 4)
+        OptionMenu(window, self.pantsNum, *numProduct).grid(row = 5, column = 5)
+
+        self.subtotal = IntVar()
+        self.subtotal.set(0)
+
+        Label(window, textvariable = self.subtotal).grid(row = 6, column = 7, sticky = E)
+        #For each of the two outputs, create a String variable and output each to a Label in the Window
+        self.taxAndShippingVar = StringVar()
+        Label(window, textvariable = self.taxAndShippingVar).grid(row = 7, column = 7, sticky = E)
+        self.finalPrice = StringVar()
+        Label(window, textvariable = self.finalPrice).grid(row = 8, column = 7, sticky = E)
+        #Create a Compute Total Cost button to call the computeTotalCost function
+        Button(window, text = "Compute Total Cost", command = self.computeTotalCost).grid(row = 9, column = 6, sticky = E)
+        #Create a 'Proceed to Payment and Delivery' button to move to the next window
+        # Button(window, text = 'Proceed to Payment and Delivery', command = PayDelivWindow).grid(row = 9, column = 7, sticky = E)
+        
+        self.shirtPrice = 22
+        self.longSleevePrice = 30
+        self.hoodiePrice = 45
+        self.pantsPrice = 40
+
+    def getTaxAndShipping(self, subtotal):
+        #this function calculates the tax and shipping by multiplying the subtotal cost by the sales tax rate in Texas, then adding the $5 shipping fee
+        taxAndShipping = (subtotal * 0.0825) + 5
+        return taxAndShipping
+
+    def computeTotalCost(self):
+        #this function computes the total cost of the order by adding the different products and their respective prices together and then adding the tax and shipping fees associated with the purchase
+        self.subtotal.set((self.shirtPrice*self.shirtNum.get())+(self.longSleeveNum.get()*self.longSleevePrice)+(self.hoodieNum.get()*self.hoodiePrice)+(self.pantsNum.get()*self.pantsPrice))
+        taxAndShipping = self.getTaxAndShipping(
+            int(self.subtotal.get())
+        )
+        self.taxAndShippingVar.set(format(taxAndShipping, '10.2f'))
+        finalPrice = float(self.taxAndShippingVar.get()) + int(self.subtotal.get())
+        self.finalPrice.set(format(finalPrice,'10.2f'))
+
+OrderCostCalculator()  # Create GUI
+
+def DelivWindow():
+    deliv = Tk()
+    deliv.title("Delivery") # Set title of the window
+    deliv.title = 'Delivery Method'
+    Label(deliv, text = "Select Delivery Method:").grid(row = 1, column = 1, sticky = W)
+    delivChoice = StringVar()
+    delivOption = ["", "Ship", "Pickup"]
+    OptionMenu(deliv, delivChoice, *delivOption).grid(row = 1, column = 2)
+
+    def DelivChoice():
+        deliv1 = delivChoice.get()
+        shipAdd = str('Ship')
+        pickup = str("Pickup")
+
+        if deliv1 == shipAdd:
+            ShipAddress()
+        elif deliv1 == pickup:
+            PickupOrder()
+
+    Button(deliv, text = 'Confirm Delivery Type', command = DelivChoice).grid(row = 3, column = 3, sticky = E)
+    Button(deliv, text = 'Proceed to Payment', command = PayWindow).grid(row = 3, column = 4, sticky = E)
+
+    def ShipAddress():
+        Label(deliv, text = "Street Name:").grid(row = 3, column = 1, sticky = W)
+        Label(deliv, text = "City:").grid(row = 4, column = 1, sticky = W)
+        Label(deliv, text = "State:").grid(row = 5, column = 1, sticky = W)
+        Label(deliv, text = "ZIP Code:").grid(row = 6, column = 1, sticky = W)
+
+        streetName = IntVar()
+        Entry(deliv, textvariable = streetName).grid(row = 3, column = 2, sticky = W)
+        city = IntVar()
+        Entry(deliv, textvariable = city).grid(row = 4, column = 2, sticky = W)
+       
+        stateSelect = [ #create a drop down menu for state selection on the delivery page
+            "Select",
+            "Alabama",
+            "Alaska",
+            "Arizona",
+            "Arkansas",
+            "California",
+            "Colorado",
+            "Connecticut",
+            "Delaware",
+            "Florida",
+            "Georgia",
+            "Hawaii",
+            "Idaho",
+            "Illinois",
+            "Indiana",
+            "Iowa",
+            "Kansas",
+            "Kentucky",
+            "Louisiana",
+            "Maine",
+            "Maryland",
+            "Massachusetts",
+            "Michigan",
+            "Minnesota",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "New York",
+            "North Carolina",
+            "North Dakota",
+            "Ohio",
+            "Oklahoma",
+            "Oregon",
+            "Pennsylvania",
+            "Rhode Island",
+            "South Carolina",
+            "South Dakota",
+            "Tennessee",
+            "Texas",
+            "Utah",
+            "Vermont",
+            "Virginia",
+            "Washington",
+            "West Virginia",
+            "Wisconsin",
+            "Wyoming"
+            ]
+
+        state = StringVar(deliv)
+        OptionMenu(deliv, state, *stateSelect).grid(row = 5, column = 2, sticky = W)
+        zipCode = StringVar()
+        Entry(deliv, textvariable = zipCode).grid(row = 6, column = 2, sticky = W)
+
+    def PickupOrder():
+        Label(deliv, text = "If you selceted 'Pickup', pickup at: TCU Rec Center").grid(row = 3, column = 1, sticky = W)
+
+def PayWindow():
+        pay = Tk()
+        pay.title("Payment") # Set title of the window
+        pay.title = 'Payment Method'
+        Label(pay, text = "Enter Payment Information Below:").grid(row = 1, column = 1, sticky = W)    
+        Label(pay, text = "Card Number:").grid(row = 3, column = 1, sticky = W) #enter payment information
+        Label(pay, text = "Name on Card:").grid(row = 3, column = 3, sticky = W) #enter payment information
+        Label(pay, text = "Expiration Date:").grid(row = 4, column = 1, sticky = W) #enter payment information
+        Label(pay, text = "CVC/Security Code:").grid(row = 4, column = 3, sticky = W) #enter payment information
+        cardNum = StringVar()
+        Entry(pay, textvariable = cardNum).grid(row = 3, column = 2, sticky = W)
+        nameCard = StringVar()
+        Entry(pay, textvariable = nameCard).grid(row = 3, column = 4, sticky = W)
+        exDate = StringVar()
+        Entry(pay, textvariable = exDate).grid(row = 4, column = 2, sticky = W)
+        cvc = StringVar()
+        Entry(pay, textvariable = cvc).grid(row = 4, column = 4, sticky = W)
+        
+        Button(pay, text = 'Place Order', command = confirmationWindow).grid(row = 6, column = 4, sticky = E) #Button Proceeds users to the delivery page
+
+Button(window, text = 'Proceed to Delivery', command = DelivWindow).grid(row = 9, column = 7, sticky = E)      
+
+confNum = random.randint(0,99999)
+
+def confirmationWindow():#create window to confirm order being placed by the user
+    conf = Tk()
+    conf.title("Order Confirmation") #Display a confirmation message to customers
+    Label(conf, text = "Your order has been recieved! Your Order Number is #00" +str(confNum), foreground='White', background='Purple', font = ('Times New Roman', 30)).grid(row = 3, column = 1, sticky = N)
+    Label(conf, text = "Orders will be shipped within two business days.", foreground='White', background='Purple', font = ('Times New Roman', 30)).grid(row = 4, column = 1, sticky = N)
+    Label(conf, text = "Thank you for shopping at TCU Lacrosse Team Store.",foreground='White', background='Purple', font = ('Times New Roman', 30)).grid(row = 5, column = 1, sticky = N)
+
+mainloop()
